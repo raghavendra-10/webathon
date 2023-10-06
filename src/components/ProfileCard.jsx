@@ -41,8 +41,11 @@ const ProfileCard = ({ profile, onAccept ,onDelete}) => {
           alt="profile photo"
           className="w-40 h-40 object-cover rounded-full mb-2"
         />
+        <h2 className="text-xl font-semibold">{profile.registrationNumber}</h2>
         <h2 className="text-xl font-semibold">{profile.username}</h2>
       </div>
+      <p className="text-gray-800 text-center mt-2">Batch: {profile.batch}</p>
+      <p className="text-gray-800 text-center mt-2">Branch: {profile.branch}</p>
       <p className="text-gray-800 text-center mt-2">Company: {profile.companyName}</p>
       <p className="text-gray-800 text-center mt-2">Package Offered: {profile.packageOffered}</p>
       <div className="flex justify-between items-center">

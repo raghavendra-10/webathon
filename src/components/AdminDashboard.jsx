@@ -24,23 +24,21 @@ const AdminDashboard = () => {
   const [activeProfiles, setActiveProfiles] = useState([]);
 
   useEffect(() => {
-    // Create a Firestore query to get profiles with active placement status
-    const profilesCollection = collection(db, "profiles");
-    const q = query(profilesCollection, where("placementStatus", "==", "active"));
-
-    // Fetch the profiles that match the query
-    const fetchActiveProfiles = async () => {
+    // Fetch all profiles from the "profiles" collection
+    const fetchAllProfiles = async () => {
       try {
-        const querySnapshot = await getDocs(q);
+        const profilesCollection = collection(db, "profiles");
+        const querySnapshot = await getDocs(profilesCollection);
         const profiles = querySnapshot.docs.map((doc) => doc.data());
         setActiveProfiles(profiles);
       } catch (error) {
-        console.error("Error fetching active profiles:", error);
+        console.error("Error fetching profiles:", error);
       }
     };
 
-    fetchActiveProfiles();
+    fetchAllProfiles();
   }, []);
+
 
 
   const handleLogout = async () => {

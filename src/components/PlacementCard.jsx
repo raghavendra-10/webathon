@@ -9,8 +9,11 @@ const PlacementCard = ({ placement }) => {
           alt="profile photo"
           className="w-40 h-40 object-cover rounded-full mb-2"
         />
+        <h2 className="text-xl font-semibold">{placement.registrationNumber}</h2>
         <h2 className="text-xl font-semibold">{placement.username}</h2>
       </div>
+      <p className="text-gray-800 text-center mt-2">Batch: {placement.batch}</p>
+      <p className="text-gray-800 text-center mt-2">Branch: {placement.branch}</p>
       <p className="text-gray-800 text-center mt-2">Company: {placement.companyName}</p>
       <p className="text-gray-800 text-center mt-2">Package Offered: {placement.packageOffered}</p>
       {/* Add more placement fields as needed */}
