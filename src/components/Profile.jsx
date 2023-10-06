@@ -28,6 +28,11 @@ const Profile = () => {
   const [bio, setBio] = useState("");
   const [username, setUsername] = useState("");
   
+  const [placementStatus, setPlacementStatus] = useState(null);
+  const [companyName, setCompanyName] = useState("");
+  const [packageOffered, setPackageOffered] = useState("");
+  const [offerLetter, setOfferLetter] = useState(null);
+  
 
   useEffect(() => {
     async function fetchProfilePhotoURL() {
@@ -93,44 +98,50 @@ const Profile = () => {
       toast.error(error);
     }
   };
-  const handleBioUpload = async () => {
+  const handleSave = async () => {
     if (!user?.uid) return;
 
     try {
-      // Set upload status to false after successful upload
+        const profilesCollection = collection(db, "profiles");
+        const profileQuery = query(profilesCollection, where("uid", "==", user.uid));
+        const profileSnapshot = await getDocs(profileQuery);
 
-      const profilesCollection = collection(db, "profiles");
-      const profileQuery = query(
-        profilesCollection,
-        where("uid", "==", user.uid)
-      );
-      const profileSnapshot = await getDocs(profileQuery);
-      if (!profileSnapshot.empty) {
-        const profileDoc = profileSnapshot.docs[0];
-        const profileDocRef = doc(db, "profiles", profileDoc.id);
+        let offerLetterURL = null;
+        if (offerLetter) {
+            const storageRef = ref(storage, `offer-letters/${user.uid}`);
+            await uploadBytes(storageRef, offerLetter);
+            offerLetterURL = await getDownloadURL(storageRef);
+        }
 
-        // Update the document with the new photo URL and bio
-        await updateDoc(profileDocRef, {
-          username: username,
-          bio: bio,
-        });
+        const profileData = {
+            uid: user.uid,
+            username: username,
+            bio: bio,
+            profilePhotoURL: profilePhotoURL,  // this line is not needed if you're not updating the photo
+            placementStatus: placementStatus,
+            companyName: placementStatus === 'active' ? companyName : null,
+            packageOffered: placementStatus === 'active' ? packageOffered : null,
+            offerLetterURL: offerLetterURL
+        };
 
-        toast.success("Profile updated successfully");
-      } else {
-        await addDoc(profilesCollection,{
-          uid: user.uid,
-          username : username ,
-          bio :  bio,
-        });
-        toast.success("Profile created successfully");
-      }
+        if (!profileSnapshot.empty) {
+            const profileDoc = profileSnapshot.docs[0];
+            const profileDocRef = doc(db, "profiles", profileDoc.id);
+
+            // Update the document with the new data
+            await updateDoc(profileDocRef, profileData);
+
+            toast.success("Profile updated successfully");
+        } else {
+            await addDoc(profilesCollection, profileData);
+            toast.success("Profile created successfully");
+        }
     } catch (error) {
-      setIsUploading(false); // Set upload status to false on error
-
-      console.error("Error adding data to Firestore:", error);
-      toast.error(error);
+        console.error("Error saving profile data to Firestore:", error);
+        toast.error(error.message || "Error saving profile data");
     }
-  };
+};
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -139,7 +150,13 @@ const Profile = () => {
       setSelectedFileName(file.name);
     }
   };
+  const handlePlacementStatusChange = (e) => {
+    setPlacementStatus(e.target.value);
+  };
 
+  const handleOfferLetterChange = (e) => {
+    setOfferLetter(e.target.files[0]);
+  };
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100 "
@@ -262,9 +279,64 @@ const Profile = () => {
             </div>
           )}
         </div>
+        <div className="mt-4">
+        <h2 className="text-xl font-semibold mb-2">Placement Status</h2>
+
+        <label>
+          <input
+            type="radio"
+            value="notActive"
+            checked={placementStatus === 'notActive'}
+            onChange={handlePlacementStatusChange}
+          />
+          Not Placed
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="active"
+            checked={placementStatus === 'active'}
+            onChange={handlePlacementStatusChange}
+          />
+          Placed
+        </label>
+
+        {placementStatus === 'notActive' && <p>Placement not done yet.</p>}
+
+        {placementStatus === 'active' && (
+          <div>
+            <label>
+              Company Name:
+              <input 
+                type="text" 
+                value={companyName} 
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </label>
+
+            <label>
+              Package:
+              <input 
+                type="text" 
+                value={packageOffered}
+                onChange={(e) => setPackageOffered(e.target.value)}
+              />
+            </label>
+
+            <label>
+              Offer Letter:
+              <input 
+                type="file" 
+                onChange={handleOfferLetterChange}
+              />
+            </label>
+            {/* Add a submit button to submit the placement details */}
+          </div>
+        )}
+      </div>
 
         <button
-          onClick={handleBioUpload}
+          onClick={handleSave}
           className="bg-blue-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg self-end"
         >
           {isUploading ? (

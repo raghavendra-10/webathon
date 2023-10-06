@@ -108,9 +108,7 @@ const BookmarkDashboard = () => {
               <SiPhpmyadmin size={24} />
             </Link>
           </div>
-          <div className="text-gray-600 hover:text-blue-500">
-          <Link to="/calenderdashboard"><PiBellRingingDuotone size={24} /></Link>
-          </div>
+          
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
             <RiBookmarkLine size={24} />

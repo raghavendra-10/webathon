@@ -17,6 +17,7 @@ import BookmarkDashboard from "./components/BookmarkDashboard";
 
 
 function App() {
+
   return (
     <div className="App">
       <AuthContextProvider>
@@ -36,10 +37,11 @@ function App() {
                 </ProtectedRoutes>
               }
             />
+            
             <Route
               path="/admindashboard"
               element={
-                <ProtectedRoutes>
+                <ProtectedRoutes >
                   <AdminDashboard />
                 </ProtectedRoutes>
               }

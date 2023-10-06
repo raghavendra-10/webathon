@@ -1,53 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebaseConfig";
-import {
-  collection,
-  getDocs,
-  where,
-  query,
-  doc,
-  deleteDoc, // Import deleteDoc from firebase/firestore
-} from "firebase/firestore";
+import { collection, getDocs, where, query, doc, deleteDoc } from "firebase/firestore";
 import { Link, useParams } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
-
 import Logo from "../assests/BG.jpeg";
-import ProjectForm from "./ProjectLinks"; // Import the ProjectForm component
+import ProjectForm from "./ProjectLinks";
 
 const StudentProfile = () => {
   const { user } = UserAuth();
-  const { authorId } = useParams(); // Get authorId from route parameters
+  const { authorId } = useParams();
   const [profilePhotoURL, setProfilePhotoURL] = useState(null);
   const [bio, setBio] = useState("");
   const [username, setUsername] = useState("");
-  const isCurrentUser = user.uid === authorId; // Check if the current user is the profile owner
-
-  // State variable to control the visibility of the project form popup
+  const isCurrentUser = user.uid === authorId;
   const [showProjectForm, setShowProjectForm] = useState(false);
-
-  // State variable to store project data
   const [projects, setProjects] = useState([]);
-
-  // State variable to track form submission status
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [placementStatus, setPlacementStatus] = useState(null);
+  const [companyName, setCompanyName] = useState("");
+  const [packageOffered, setPackageOffered] = useState("");
+  
 
   useEffect(() => {
     async function fetchProfileData() {
       if (!authorId) return; // Handle the case where authorId is not provided
-
+  
       const profilesCollection = collection(db, "profiles");
       const q = query(profilesCollection, where("uid", "==", authorId));
       const querySnapshot = await getDocs(q);
-
+  
       if (!querySnapshot.empty) {
-        const profileData = querySnapshot.docs[0].data();
-        setProfilePhotoURL(profileData.profilePhotoURL);
-        setUsername(profileData.username || "");
-        setBio(profileData.bio || "");
+          const profileData = querySnapshot.docs[0].data();
+          setProfilePhotoURL(profileData.profilePhotoURL);
+          setUsername(profileData.username || "");
+          setBio(profileData.bio || "");
+          setPlacementStatus(profileData.placementStatus || null);
+          setCompanyName(profileData.companyName || "");
+          setPackageOffered(profileData.packageOffered || "");
       }
-    }
-
+  }
+  
     fetchProfileData();
 
     async function fetchProjectsData() {
@@ -95,6 +88,8 @@ const StudentProfile = () => {
       console.error("Error deleting project: ", error);
     }
   };
+  
+
 
   return (
     <div
@@ -134,6 +129,17 @@ const StudentProfile = () => {
           <h2 className="text-lg font-semibold">Bio</h2>
           <p className="text-navy-800">{bio}</p>
         </div>
+        <div>
+    <h2 className="text-lg font-semibold">Placement Status</h2>
+    <p className="text-navy-800">
+        {placementStatus === 'active' 
+            ? `Placed at ${companyName} with a package of ${packageOffered}`
+            : 'Not Placed'
+        }
+    </p>
+</div>
+
+        
         {/* Add Projects button */}
         {isCurrentUser && (
           <button

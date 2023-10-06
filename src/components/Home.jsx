@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
-import Logo from "../assests/newlogo.png";
+import Logo from "../assests/bgplace.jpg";
 
 const Home = () => {
   return (

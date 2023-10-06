@@ -10,7 +10,6 @@ import { db } from "../firebaseConfig";
 import { collection } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
 
-import { PiBellRingingDuotone } from "react-icons/pi";
 import { AiFillHome } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +20,7 @@ const Dashboard = () => {
   const [showTweetForm, setShowTweetForm] = useState(false);
   const [username, setUsername] = useState("");
   const [adminUid, setAdminUid] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -48,21 +48,23 @@ const Dashboard = () => {
     fetchProfilePhotoURL();
 
     async function fetchAdminUid() {
-      try {
-        const adminsCollection = collection(db, "admins");
-        const adminsQuerySnapshot = await getDocs(adminsCollection);
-        if (!adminsQuerySnapshot.empty) {
-          const adminData = adminsQuerySnapshot.docs[0].data();
-          setAdminUid(adminData.adminUid || "");
-          
+        try {
+          const adminsCollection = collection(db, "admin");
+          const adminsQuerySnapshot = await getDocs(adminsCollection);
+          if (!adminsQuerySnapshot.empty) {
+            const adminData = adminsQuerySnapshot.docs[0].data();
+            setAdminUid(adminData.uid || "");
+  
+            // Check if the user is an admin
+            setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
+          }
+        } catch (error) {
+          console.error("Error fetching admin UID:", error);
         }
-      } catch (error) {
-        console.error("Error fetching admin UID:", error);
       }
-    }
-
-    fetchAdminUid();
-  }, [user.uid, adminUid]);
+  
+      fetchAdminUid();
+    }, [user.uid, adminUid]);
   const handleTweetClick = () => {
     if (!username) {
       // Show a notification to fill the profile
@@ -112,14 +114,14 @@ const Dashboard = () => {
               <RiProfileLine size={24} />
             </Link>
           </div>
+          {isAdmin&&(
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/admindashboard">
               <SiPhpmyadmin size={24} />
             </Link>
           </div>
-          <div className="text-gray-600 hover:text-blue-500">
-            <Link to="/calenderdashboard"><PiBellRingingDuotone size={24} /></Link>
-          </div>
+)}
+         
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
             <RiBookmarkLine size={24} />
