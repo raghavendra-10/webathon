@@ -1,22 +1,19 @@
 import React from "react";
+import './PlacementCard.css';
 
 const PlacementCard = ({ placement }) => {
   return (
-    <div className="border border-gray-200 p-4 rounded-lg mb-4 shadow-md">
-      <div className="flex flex-col items-center mb-4">
-      <img
-          src={placement.profilePhotoURL}
-          alt="profile photo"
-          className="w-40 h-40 object-cover rounded-full mb-2"
+    <div className="placement-card">
+      <div className="card-content">
+        <img
+            src={placement.profilePhotoURL}
+            alt="profile photo"
+            className="profile-photo"
         />
-        <h2 className="text-xl font-semibold">{placement.registrationNumber}</h2>
-        <h2 className="text-xl font-semibold">{placement.username}</h2>
+        <h2 className="profile-name">{placement.username}</h2>
+        <p className="company-name">Company: {placement.companyName}</p>
+        <p className="package-offered">Package Offered: {placement.packageOffered}</p>
       </div>
-      <p className="text-gray-800 text-center mt-2">Batch: {placement.batch}</p>
-      <p className="text-gray-800 text-center mt-2">Branch: {placement.branch}</p>
-      <p className="text-gray-800 text-center mt-2">Company: {placement.companyName}</p>
-      <p className="text-gray-800 text-center mt-2">Package Offered: {placement.packageOffered}</p>
-      {/* Add more placement fields as needed */}
     </div>
   );
 };
