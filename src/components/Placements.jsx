@@ -43,7 +43,7 @@ const Placements = ({ placement }) => {
           </svg>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 max-w-5xl">
         {placements
           .filter((placement) => 
             placement.username.toLowerCase().includes(searchTerm.toLowerCase())

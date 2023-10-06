@@ -7,12 +7,13 @@ import TweetForm from "./TweetForm";
 import { SiPhpmyadmin } from "react-icons/si";
 import { RiProfileLine, RiBookmarkLine } from "react-icons/ri";
 import { db } from "../firebaseConfig";
-import { collection,doc,deleteDoc } from "firebase/firestore";
+import { collection, doc, deleteDoc } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
 
 import ProfileCard from "./ProfileCard";
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import PlacementUpload from "./PlacementUpload";
 
 
 const AdminDashboard = () => {
@@ -33,13 +34,13 @@ const AdminDashboard = () => {
       const allProfiles = querySnapshot.docs.map(doc => doc.data());
 
       const batches = ['2025', '2024', '2023', '2022', '2021'];
-      
+
       const avgPackages = batches.map(batch => {
         const batchProfiles = allProfiles.filter(profile => profile.batch === batch);
         const validPackages = batchProfiles.map(profile => parseFloat(profile.packageOffered)).filter(pkg => !isNaN(pkg));
 
         const totalPackage = validPackages.reduce((acc, pkg) => acc + pkg, 0);
-        
+
         return {
           batch,
           avgPackage: validPackages.length ? (totalPackage / validPackages.length) : 0
@@ -50,7 +51,7 @@ const AdminDashboard = () => {
     }
 
     fetchData();
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -160,19 +161,24 @@ const AdminDashboard = () => {
         </div>
 
         <div className="mb-8 pb-8 mt-2 pt-8">
-       
+
           <div className="mb-8 pb-8 mt-2 pt-8">
-          <BarChart width={600} height={300} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="batch" />
-      <YAxis />
-      <Tooltip />
-      <Bar dataKey="avgPackage" fill="#8884d8" />
-    </BarChart>
+            <div className="flex justify-around">
+            <BarChart width={600} height={300} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="batch" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="avgPackage" fill="#8884d8" />
+            </BarChart>
+            <div className="flex  justify-center flex-col">
+              <PlacementUpload/>
+            </div>
+            </div>
             <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {activeProfiles.map((profile) => (
-                <ProfileCard key={profile.uid} profile={profile}  onDelete={() => handleDeleteProfile(profile.uid)} />
+                <ProfileCard key={profile.uid} profile={profile} onDelete={() => handleDeleteProfile(profile.uid)} />
               ))}
             </div>
           </div>
@@ -203,7 +209,7 @@ const AdminDashboard = () => {
               <RiBookmarkLine size={24} />
             </Link>
           </div>
-         
+
         </div>
       </div>
 
