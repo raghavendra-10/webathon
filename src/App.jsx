@@ -12,9 +12,9 @@ import StudentProfile from "./components/StudentProfile";
 
 import AdminDashboard from "./components/AdminDashboard";
 
-import CalenderDashboard from "./components/CalenderDashboard";
 
 import BookmarkDashboard from "./components/BookmarkDashboard";
+
 
 
 function App() {
@@ -36,14 +36,7 @@ function App() {
                 </ProtectedRoutes>
               }
             />
-            <Route
-              path="/admindashboard"
-              element={
-                <ProtectedRoutes>
-                  <AdminDashboard />
-                </ProtectedRoutes>
-              }
-            />
+      
             <Route
               path="/bookmarks"
               element={
@@ -53,10 +46,10 @@ function App() {
               }
             />
             <Route
-              path="/calenderdashboard"
+              path="/admindashboard"
               element={
                 <ProtectedRoutes>
-                  <CalenderDashboard />
+                  <AdminDashboard />
                 </ProtectedRoutes>
               }
             />

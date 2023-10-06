@@ -12,6 +12,8 @@ import { getDocs, where, query } from "firebase/firestore";
 
 import ProfileCard from "./ProfileCard";
 
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+
 
 const AdminDashboard = () => {
   const { user, logout } = UserAuth();
@@ -22,6 +24,34 @@ const AdminDashboard = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeProfiles, setActiveProfiles] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const profilesCollection = collection(db, "profiles");
+      const querySnapshot = await getDocs(profilesCollection);
+      const allProfiles = querySnapshot.docs.map(doc => doc.data());
+
+      const batches = ['2025', '2024', '2023', '2022', '2021'];
+      
+      const avgPackages = batches.map(batch => {
+        const batchProfiles = allProfiles.filter(profile => profile.batch === batch);
+        const validPackages = batchProfiles.map(profile => parseFloat(profile.packageOffered)).filter(pkg => !isNaN(pkg));
+
+        const totalPackage = validPackages.reduce((acc, pkg) => acc + pkg, 0);
+        
+        return {
+          batch,
+          avgPackage: validPackages.length ? (totalPackage / validPackages.length) : 0
+        };
+      });
+
+      setData(avgPackages);
+    }
+
+    fetchData();
+}, []);
+
 
   useEffect(() => {
     // Fetch all profiles from the "profiles" collection
@@ -130,7 +160,15 @@ const AdminDashboard = () => {
         </div>
 
         <div className="mb-8 pb-8 mt-2 pt-8">
+       
           <div className="mb-8 pb-8 mt-2 pt-8">
+          <BarChart width={600} height={300} data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="batch" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="avgPackage" fill="#8884d8" />
+    </BarChart>
             <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {activeProfiles.map((profile) => (

@@ -18,6 +18,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaSpinner } from "react-icons/fa"; // Import the spinner icon
 import Logo from "../assests/BG.jpeg";
+import emailjs from "emailjs-com";
 
 const Profile = () => {
   const { user } = UserAuth();
@@ -110,6 +111,29 @@ const Profile = () => {
       toast.error(error);
     }
   };
+  const sendEmail = () => {
+    // Define your template parameters here
+    const templateParams = {
+      username: username,
+      bio: bio,
+      registrationNumber: registrationNumber,
+      batch: batch,
+      branch: branch,
+      placementStatus: placementStatus,
+      companyName: companyName,
+      packageOffered: packageOffered,
+      // Add other details as needed
+    };
+  
+    emailjs.send('service_7e6jwna', 'template_6d2gjfa', templateParams, '8KxLJH_yEEOQgZvpz')
+      .then((response) => {
+        console.log('Email successfully sent!', response);
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
+  }
+  
  
   const handleSave = async () => {
     if (!user?.uid) return;
@@ -146,7 +170,7 @@ const Profile = () => {
 
         // Update the document with the new data
         await updateDoc(profileDocRef, profileData);
-
+        sendEmail();
         toast.success("Profile updated successfully");
       } else {
         await addDoc(profilesCollection, profileData);
