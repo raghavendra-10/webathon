@@ -1,5 +1,5 @@
 import React from "react";
-import './PlacementCard.css';
+// import './PlacementCard.css';
 
 const PlacementCard = ({ placement }) => {
   return (
