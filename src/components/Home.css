@@ -159,15 +159,15 @@ main > div > a:hover {
 }
 
 .swiper-slide--one {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("C:\Users\USER\OneDrive\Desktop\Vrse\webathon\src\assests\download.jpeg") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/download.jpeg") no-repeat 50% 50%/cover;
 }
 
 .swiper-slide--two {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("C:\Users\USER\OneDrive\Desktop\Vrse\webathon\src\assests\images.png") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/images.png") no-repeat 50% 50%/cover;
 }
 
 .swiper-slide--three {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("C:\Users\USER\OneDrive\Desktop\Vrse\webathon\src\assests\images.jpeg") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/images.jpeg") no-repeat 50% 50%/cover;
 }
 
 /* .swiper-slide--four {
