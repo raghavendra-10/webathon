@@ -5,15 +5,15 @@
   * {
     box-sizing: border-box;
   }
-  /* body {
+  /* body { 
     width: 100vw;
     height: 100vh;
-    margin: 0;
+    margin: 3px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background: #180148;
-  } */
+    align-items: center; 
+    background: #180148; 
+   } */
   .card {
     width: var(--card-width);
     height: var(--card-height);

@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import CardComponent from './components/Card';
+import University from './download.png';
 
 
 function App() {
@@ -9,8 +10,8 @@ function App() {
     <div className="App">
       <header className="flex justify-between items-center p-4 bg-blue-500">
         <div className="flex space-x-4">
-          <img src="/path-to-image1.jpg" alt="Image1" className="w-16 h-16"/>
-          <img src="/path-to-image2.jpg" alt="Image2" className="w-16 h-16"/>
+          <img src={University} alt="Image1" className="w-16 h-16"/>
+          {/* <img src="/path-to-image2.jpg" alt="Image2" className="w-16 h-16"/> */}
         </div>
         <div className="flex space-x-4">
           <button className="text-white">Home</button>

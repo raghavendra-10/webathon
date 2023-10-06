@@ -1,5 +1,6 @@
 import React from 'react';
 import './Card.css';
+import Profile from './Images/profile.jpeg';
 
 function CardComponent() {
   const cards = [
@@ -11,6 +12,12 @@ function CardComponent() {
     },
     {
       link: "https://www.mythrillfiction.com/force-mage",
+      coverImage: {Profile},
+      titleImage: "https://ggayane.github.io/css-experiments/cards/force_mage-title.png",
+      characterImage: "https://ggayane.github.io/css-experiments/cards/force_mage-character.webp"
+    },
+    {
+      link: "https://www.mythrillfiction.com/force-mage",
       coverImage: "https://ggayane.github.io/css-experiments/cards/force_mage-cover.jpg",
       titleImage: "https://ggayane.github.io/css-experiments/cards/force_mage-title.png",
       characterImage: "https://ggayane.github.io/css-experiments/cards/force_mage-character.webp"
@@ -18,7 +25,7 @@ function CardComponent() {
   ];
 
   return (
-    <div>
+    <div className='flex'>
       {cards.map((card, index) => (
         <a key={index} href={card.link} alt="Mythrill" target="_blank" rel="noopener noreferrer">
           <div className="card">
