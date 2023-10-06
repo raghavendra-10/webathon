@@ -10,8 +10,8 @@ import { db } from "../firebaseConfig";
 import { collection } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
 import { LuMessagesSquare } from "react-icons/lu";
-import { PiBellRingingDuotone } from "react-icons/pi";
-import AdminTweetsList from "./AdminTweetList";
+import ProfileCard from "./ProfileCard";
+
 
 const AdminDashboard = () => {
   const { user, logout } = UserAuth();
@@ -19,6 +19,29 @@ const AdminDashboard = () => {
   const [showTweetForm, setShowTweetForm] = useState(false);
   const [username, setUsername] = useState("");
   const [adminUid, setAdminUid] = useState("");
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [activeProfiles, setActiveProfiles] = useState([]);
+
+  useEffect(() => {
+    // Create a Firestore query to get profiles with active placement status
+    const profilesCollection = collection(db, "profiles");
+    const q = query(profilesCollection, where("placementStatus", "==", "active"));
+
+    // Fetch the profiles that match the query
+    const fetchActiveProfiles = async () => {
+      try {
+        const querySnapshot = await getDocs(q);
+        const profiles = querySnapshot.docs.map((doc) => doc.data());
+        setActiveProfiles(profiles);
+      } catch (error) {
+        console.error("Error fetching active profiles:", error);
+      }
+    };
+
+    fetchActiveProfiles();
+  }, []);
+
 
   const handleLogout = async () => {
     try {
@@ -46,21 +69,23 @@ const AdminDashboard = () => {
     fetchProfilePhotoURL();
 
     async function fetchAdminUid() {
-      try {
-        const adminsCollection = collection(db, "admins");
-        const adminsQuerySnapshot = await getDocs(adminsCollection);
-        if (!adminsQuerySnapshot.empty) {
-          const adminData = adminsQuerySnapshot.docs[0].data();
-          setAdminUid(adminData.adminUid || "");
-         
+        try {
+          const adminsCollection = collection(db, "admin");
+          const adminsQuerySnapshot = await getDocs(adminsCollection);
+          if (!adminsQuerySnapshot.empty) {
+            const adminData = adminsQuerySnapshot.docs[0].data();
+            setAdminUid(adminData.uid || "");
+  
+            // Check if the user is an admin
+            setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
+          }
+        } catch (error) {
+          console.error("Error fetching admin UID:", error);
         }
-      } catch (error) {
-        console.error("Error fetching admin UID:", error);
       }
-    }
-
-    fetchAdminUid();
-  }, [user.uid, adminUid]);
+  
+      fetchAdminUid();
+    }, [user.uid, adminUid]);
 
   return (
     <div className="flex">
@@ -87,7 +112,14 @@ const AdminDashboard = () => {
         </div>
 
         <div className="mb-8 pb-8 mt-8 pt-8">
-          <AdminTweetsList />
+        <div className="mb-8 pb-8 mt-8 pt-8">
+          <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {activeProfiles.map((profile) => (
+              <ProfileCard key={profile.uid} profile={profile} />
+            ))}
+          </div>
+        </div>
           <div className="text-center mt-4"></div>
         </div>
 
@@ -102,11 +134,13 @@ const AdminDashboard = () => {
               <RiProfileLine size={24} />
             </Link>
           </div>
+          {isAdmin&&(
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/admindashboard">
               <SiPhpmyadmin size={24} />
             </Link>
           </div>
+          )}
         
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">

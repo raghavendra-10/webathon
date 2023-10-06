@@ -10,7 +10,7 @@ import { db } from "../firebaseConfig";
 import { collection } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
 import { LuMessagesSquare } from "react-icons/lu";
-import { PiBellRingingDuotone } from "react-icons/pi";
+
 
 import BookmarkedList from "./BookmarksTab";
 
@@ -20,6 +20,7 @@ const BookmarkDashboard = () => {
   const [showTweetForm, setShowTweetForm] = useState(false);
   const [username, setUsername] = useState("");
   const [adminUid, setAdminUid] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -48,12 +49,14 @@ const BookmarkDashboard = () => {
 
     async function fetchAdminUid() {
       try {
-        const adminsCollection = collection(db, "admins");
+        const adminsCollection = collection(db, "admin");
         const adminsQuerySnapshot = await getDocs(adminsCollection);
         if (!adminsQuerySnapshot.empty) {
           const adminData = adminsQuerySnapshot.docs[0].data();
-          setAdminUid(adminData.adminUid || "");
-         
+          setAdminUid(adminData.uid || "");
+
+          // Check if the user is an admin
+          setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
         }
       } catch (error) {
         console.error("Error fetching admin UID:", error);
@@ -103,11 +106,13 @@ const BookmarkDashboard = () => {
               <RiProfileLine size={24} />
             </Link>
           </div>
+          {isAdmin&&(
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/admindashboard">
               <SiPhpmyadmin size={24} />
             </Link>
           </div>
+          )}
           
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
