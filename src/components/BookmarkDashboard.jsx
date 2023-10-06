@@ -73,14 +73,20 @@ const BookmarkDashboard = () => {
           <h1
             className={`text-white font-medium text-xl sm:text-3xl duration-300 origin-center`}
           >
-            <span className="text-green-600">DI</span>
-            <span className="text-blue-500">VULGE</span>
+                <span className="text-green-600">Placement-</span>
+            <span className="text-blue-500">Portal</span>
           </h1>
 
           <div className="flex py-2 mx-auto">
             <p className="text-sm font-semibold sm:text-lg">{username}</p>
           </div>
-          <div className="flex justify-end">
+          <div className="flex gap-2  justify-end">
+            <Link
+              to="/placements"
+              className=" px-2 bg-transparent border border-blue-500 text-black hover:bg-blue-500 hover:text-white py-2  rounded">
+              Placements
+            </Link>
+
             <button
               className="bg-green-400 px-2 py-1 rounded hover:text-white"
               onClick={handleLogout}

@@ -14,6 +14,7 @@ import AdminDashboard from "./components/AdminDashboard";
 
 
 import BookmarkDashboard from "./components/BookmarkDashboard";
+import Placements from "./components/Placements";
 
 
 function App() {
@@ -43,6 +44,14 @@ function App() {
               element={
                 <ProtectedRoutes >
                   <AdminDashboard />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/placements"
+              element={
+                <ProtectedRoutes >
+                  <Placements/>
                 </ProtectedRoutes>
               }
             />

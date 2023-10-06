@@ -69,23 +69,23 @@ const AdminDashboard = () => {
     fetchProfilePhotoURL();
 
     async function fetchAdminUid() {
-        try {
-          const adminsCollection = collection(db, "admin");
-          const adminsQuerySnapshot = await getDocs(adminsCollection);
-          if (!adminsQuerySnapshot.empty) {
-            const adminData = adminsQuerySnapshot.docs[0].data();
-            setAdminUid(adminData.uid || "");
-  
-            // Check if the user is an admin
-            setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
-          }
-        } catch (error) {
-          console.error("Error fetching admin UID:", error);
+      try {
+        const adminsCollection = collection(db, "admin");
+        const adminsQuerySnapshot = await getDocs(adminsCollection);
+        if (!adminsQuerySnapshot.empty) {
+          const adminData = adminsQuerySnapshot.docs[0].data();
+          setAdminUid(adminData.uid || "");
+
+          // Check if the user is an admin
+          setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
         }
+      } catch (error) {
+        console.error("Error fetching admin UID:", error);
       }
-  
-      fetchAdminUid();
-    }, [user.uid, adminUid]);
+    }
+
+    fetchAdminUid();
+  }, [user.uid, adminUid]);
 
   return (
     <div className="flex">
@@ -94,14 +94,20 @@ const AdminDashboard = () => {
           <h1
             className={`text-white font-medium text-xl sm:text-3xl duration-300 origin-center`}
           >
-            <span className="text-green-600">DI</span>
-            <span className="text-blue-500">VULGE</span>
+            <span className="text-green-600">Placement-</span>
+            <span className="text-blue-500">Portal</span>
           </h1>
 
           <div className="flex py-2 mx-auto">
             <p className="text-sm font-semibold sm:text-lg">{username}</p>
           </div>
-          <div className="flex justify-end">
+          <div className="flex gap-2  justify-end">
+            <Link
+              to="/placements"
+              className=" px-2 bg-transparent border border-blue-500 text-black hover:bg-blue-500 hover:text-white py-2  rounded">
+              Placements
+            </Link>
+
             <button
               className="bg-green-400 px-2 py-1 rounded hover:text-white"
               onClick={handleLogout}
@@ -112,14 +118,14 @@ const AdminDashboard = () => {
         </div>
 
         <div className="mb-8 pb-8 mt-8 pt-8">
-        <div className="mb-8 pb-8 mt-8 pt-8">
-          <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {activeProfiles.map((profile) => (
-              <ProfileCard key={profile.uid} profile={profile} />
-            ))}
+          <div className="mb-8 pb-8 mt-8 pt-8">
+            <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {activeProfiles.map((profile) => (
+                <ProfileCard key={profile.uid} profile={profile} />
+              ))}
+            </div>
           </div>
-        </div>
           <div className="text-center mt-4"></div>
         </div>
 
@@ -130,21 +136,21 @@ const AdminDashboard = () => {
             </Link>
           </div>
           <div className="text-gray-600 hover:text-blue-500">
-          <Link to={`/profile/${user.uid}`}>
+            <Link to={`/profile/${user.uid}`}>
               <RiProfileLine size={24} />
             </Link>
           </div>
-          {isAdmin&&(
-          <div className="text-gray-600 hover:text-blue-500">
-            <Link to="/admindashboard">
-              <SiPhpmyadmin size={24} />
-            </Link>
-          </div>
+          {isAdmin && (
+            <div className="text-gray-600 hover:text-blue-500">
+              <Link to="/admindashboard">
+                <SiPhpmyadmin size={24} />
+              </Link>
+            </div>
           )}
-        
+
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
-            <RiBookmarkLine size={24} />
+              <RiBookmarkLine size={24} />
             </Link>
           </div>
           <div
