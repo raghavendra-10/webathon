@@ -1,36 +1,101 @@
-import React from 'react';
-import './App.css';
-import CardComponent from './components/Card';
-import University from './download.png';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import React from "react";
+import Home from "./components/Home";
+import SlideLogin from "./components/SlideLogin";
+import Dashboard from "./components/Dashboard";
+import { AuthContextProvider } from "./context/AuthContext";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import Profile from "./components/Profile";
+import TweetForm from "./components/TweetForm";
+import TweetsList from "./components/TweetsList";
+import StudentProfile from "./components/StudentProfile";
+
+import AdminDashboard from "./components/AdminDashboard";
+
+
+import BookmarkDashboard from "./components/BookmarkDashboard";
 
 
 function App() {
   return (
-    <>
     <div className="App">
-      <header className="flex justify-between items-center p-4 bg-blue-500">
-        <div className="flex space-x-4">
-          <img src={University} alt="Image1" className="w-16 h-16"/>
-          {/* <img src="/path-to-image2.jpg" alt="Image2" className="w-16 h-16"/> */}
-        </div>
-        <div className="flex space-x-4">
-          <button className="text-white">Home</button>
-          <button className="text-white">Login</button>
-          <button className="text-white">Contact Us</button>
-        </div>
-      </header>
-      
-      <main className="p-10">
-        <section className="text-center my-10">
-          <h1 className="text-5xl font-bold">XYZ College Placement Section</h1>
-        </section>
+      <AuthContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<SlideLogin />} />
+            
 
-        <section className="flex flex-inline justify-around">
-            <CardComponent />
-        </section>
-      </main>
+     
+         
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoutes>
+                  <Dashboard />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/admindashboard"
+              element={
+                <ProtectedRoutes>
+                  <AdminDashboard />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/bookmarks"
+              element={
+                <ProtectedRoutes>
+                  <BookmarkDashboard />
+                </ProtectedRoutes>
+              }
+            />
+     
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoutes>
+                  <Profile />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/profile/:authorId"
+              element={
+                <ProtectedRoutes>
+                  <StudentProfile />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              element={
+                <ProtectedRoutes>
+                  <TweetForm />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              element={
+                <ProtectedRoutes>
+                  <TweetsList />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoutes>
+                  <Profile />
+                </ProtectedRoutes>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </AuthContextProvider>
     </div>
-  </>
   );
 }
 
