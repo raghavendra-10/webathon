@@ -7,9 +7,9 @@ import TweetForm from "./TweetForm";
 import { SiPhpmyadmin } from "react-icons/si";
 import { RiProfileLine, RiBookmarkLine } from "react-icons/ri";
 import { db } from "../firebaseConfig";
-import { collection } from "firebase/firestore";
+import { collection,doc,deleteDoc } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
-import { LuMessagesSquare } from "react-icons/lu";
+
 import ProfileCard from "./ProfileCard";
 
 
@@ -86,6 +86,20 @@ const AdminDashboard = () => {
 
     fetchAdminUid();
   }, [user.uid, adminUid]);
+  const handleDeleteProfile = async (profileUid) => {
+    try {
+      // Delete the document from Firestore
+      const profileDocRef = doc(db, "profiles", profileUid);
+      await deleteDoc(profileDocRef);
+
+      // Optionally, you can update the UI to remove the deleted profile
+      setActiveProfiles((prevProfiles) =>
+        prevProfiles.filter((profile) => profile.uid !== profileUid)
+      );
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+    }
+  };
 
   return (
     <div className="flex">
@@ -117,12 +131,12 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="mb-8 pb-8 mt-8 pt-8">
-          <div className="mb-8 pb-8 mt-8 pt-8">
+        <div className="mb-8 pb-8 mt-2 pt-8">
+          <div className="mb-8 pb-8 mt-2 pt-8">
             <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {activeProfiles.map((profile) => (
-                <ProfileCard key={profile.uid} profile={profile} />
+                <ProfileCard key={profile.uid} profile={profile}  onDelete={() => handleDeleteProfile(profile.uid)} />
               ))}
             </div>
           </div>
@@ -153,14 +167,7 @@ const AdminDashboard = () => {
               <RiBookmarkLine size={24} />
             </Link>
           </div>
-          <div
-            className="fixed text-white cursor-pointer text-xl px-3 py-3 bottom-[100px] right-4 transform translate-y-1/2 bg-blue-400 shadow-md rounded-md hover:bg-blue-600"
-            onClick={() => setShowTweetForm(true)}
-          >
-            <button className="h-2">
-              <LuMessagesSquare size={19} />
-            </button>
-          </div>
+         
         </div>
       </div>
 

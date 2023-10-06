@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore"; // Import Firestore methods for deleting documents
 import { db } from "../firebaseConfig"; // Import Firestore methods
 
-const ProfileCard = ({ profile, onDelete }) => {
+const ProfileCard = ({ profile, onAccept ,onDelete}) => {
   const offerLetterURL = profile.offerLetterURL;
 
   // State to track whether the profile has been accepted
@@ -15,8 +15,8 @@ const ProfileCard = ({ profile, onDelete }) => {
       const placementsCollection = collection(db, "placements");
       await addDoc(placementsCollection, profile);
 
-      // Trigger the onDelete function to remove the profile from the current view
-      onDelete(profile.uid);
+      // Trigger the onAccept function to remove the profile from the current view
+      onAccept(profile.uid);
 
       // Update the state to mark the profile as accepted
       setIsAccepted(true);
@@ -25,11 +25,13 @@ const ProfileCard = ({ profile, onDelete }) => {
     }
   };
 
+
+
   return (
     <div className="border border-gray-200 p-4 rounded-lg mb-4 shadow-md">
       <div
         className="flex float-right cursor-pointer text-red-500"
-        onClick={() => onDelete(profile.uid)}
+        onClick={onDelete}
       >
         <FaTrash />
       </div>

@@ -20,7 +20,9 @@ const StudentProfile = () => {
   const [placementStatus, setPlacementStatus] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const [packageOffered, setPackageOffered] = useState("");
-  
+  const [registrationNumber, setRegistrationNumber] = useState(""); // New state for registration number
+  const [batch, setBatch] = useState(""); // New state for batch
+  const [branch, setBranch] = useState(""); // New state for branch
 
   useEffect(() => {
     async function fetchProfileData() {
@@ -38,6 +40,9 @@ const StudentProfile = () => {
           setPlacementStatus(profileData.placementStatus || null);
           setCompanyName(profileData.companyName || "");
           setPackageOffered(profileData.packageOffered || "");
+          setRegistrationNumber(profileData.registrationNumber || "");
+          setBatch(profileData.batch || "");
+          setBranch(profileData.branch || "");
       }
   }
   
@@ -129,6 +134,18 @@ const StudentProfile = () => {
           <h2 className="text-lg font-semibold">Bio</h2>
           <p className="text-navy-800">{bio}</p>
         </div>
+        <div>
+  <h2 className="text-lg font-semibold">Registration Number</h2>
+  <p className="text-navy-800">{registrationNumber}</p>
+</div>
+<div>
+  <h2 className="text-lg font-semibold">Batch</h2>
+  <p className="text-navy-800">{batch}</p>
+</div>
+<div>
+  <h2 className="text-lg font-semibold">Branch</h2>
+  <p className="text-navy-800">{branch}</p>
+</div>
         <div>
     <h2 className="text-lg font-semibold">Placement Status</h2>
     <p className="text-navy-800">

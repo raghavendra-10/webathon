@@ -27,7 +27,10 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false); // New state for upload status
   const [bio, setBio] = useState("");
   const [username, setUsername] = useState("");
-  
+  const [registrationNumber, setRegistrationNumber] = useState(""); // New state for registration number
+  const [batch, setBatch] = useState(""); // New state for batch
+  const [branch, setBranch] = useState(""); // New state for branch
+
   const [placementStatus, setPlacementStatus] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const [packageOffered, setPackageOffered] = useState("");
@@ -47,6 +50,9 @@ const Profile = () => {
         setProfilePhotoURL(profileData.profilePhotoURL);
         setUsername(profileData.username || "");
         setBio(profileData.bio || "");
+        setRegistrationNumber(profileData.registrationNumber || ""); // Set registration number from Firestore
+        setBatch(profileData.batch || ""); // Set batch from Firestore
+        setBranch(profileData.branch || ""); // Set branch from Firestore
       }
     }
 
@@ -80,6 +86,9 @@ const Profile = () => {
         // Update the document with the new photo URL and bio
         await updateDoc(profileDocRef, {
           profilePhotoURL: photoURL,
+          registrationNumber, // Include registration number in the update
+          batch, // Include batch in the update
+          branch, 
         });
 
         toast.success("Profile updated successfully");
@@ -87,6 +96,9 @@ const Profile = () => {
         await addDoc(profilesCollection, {
           uid:user.uid,
           profilePhotoURL: photoURL,
+          registrationNumber, // Include registration number in the creation
+          batch, // Include batch in the creation
+          branch, 
         });
 
         toast.success("Profile created successfully");
@@ -98,50 +110,53 @@ const Profile = () => {
       toast.error(error);
     }
   };
+ 
   const handleSave = async () => {
     if (!user?.uid) return;
 
     try {
-        const profilesCollection = collection(db, "profiles");
-        const profileQuery = query(profilesCollection, where("uid", "==", user.uid));
-        const profileSnapshot = await getDocs(profileQuery);
+      const profilesCollection = collection(db, "profiles");
+      const profileQuery = query(profilesCollection, where("uid", "==", user.uid));
+      const profileSnapshot = await getDocs(profileQuery);
 
-        let offerLetterURL = null;
-        if (offerLetter) {
-            const storageRef = ref(storage, `offer-letters/${user.uid}`);
-            await uploadBytes(storageRef, offerLetter);
-            offerLetterURL = await getDownloadURL(storageRef);
-        }
+      let offerLetterURL = null;
+      if (offerLetter) {
+        const storageRef = ref(storage, `offer-letters/${user.uid}`);
+        await uploadBytes(storageRef, offerLetter);
+        offerLetterURL = await getDownloadURL(storageRef);
+      }
 
-        const profileData = {
-            uid: user.uid,
-            username: username,
-            bio: bio,
-            profilePhotoURL: profilePhotoURL,  // this line is not needed if you're not updating the photo
-            placementStatus: placementStatus,
-            companyName: placementStatus === 'active' ? companyName : null,
-            packageOffered: placementStatus === 'active' ? packageOffered : null,
-            offerLetterURL: offerLetterURL
-        };
+      const profileData = {
+        uid: user.uid,
+        username: username,
+        bio: bio,
+        profilePhotoURL: profilePhotoURL,
+        registrationNumber: registrationNumber, // Include registration number
+        batch: batch, // Include batch
+        branch: branch, // Include branch
+        placementStatus: placementStatus,
+        companyName: placementStatus === "active" ? companyName : null,
+        packageOffered: placementStatus === "active" ? packageOffered : null,
+        offerLetterURL: offerLetterURL,
+      };
 
-        if (!profileSnapshot.empty) {
-            const profileDoc = profileSnapshot.docs[0];
-            const profileDocRef = doc(db, "profiles", profileDoc.id);
+      if (!profileSnapshot.empty) {
+        const profileDoc = profileSnapshot.docs[0];
+        const profileDocRef = doc(db, "profiles", profileDoc.id);
 
-            // Update the document with the new data
-            await updateDoc(profileDocRef, profileData);
+        // Update the document with the new data
+        await updateDoc(profileDocRef, profileData);
 
-            toast.success("Profile updated successfully");
-        } else {
-            await addDoc(profilesCollection, profileData);
-            toast.success("Profile created successfully");
-        }
+        toast.success("Profile updated successfully");
+      } else {
+        await addDoc(profilesCollection, profileData);
+        toast.success("Profile created successfully");
+      }
     } catch (error) {
-        console.error("Error saving profile data to Firestore:", error);
-        toast.error(error.message || "Error saving profile data");
+      console.error("Error saving profile data to Firestore:", error);
+      toast.error(error.message || "Error saving profile data");
     }
-};
-
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -156,6 +171,17 @@ const Profile = () => {
 
   const handleOfferLetterChange = (e) => {
     setOfferLetter(e.target.files[0]);
+  };
+  const handleRegistrationNumberChange = (e) => {
+    setRegistrationNumber(e.target.value);
+  };
+
+  const handleBatchChange = (e) => {
+    setBatch(e.target.value);
+  };
+
+  const handleBranchChange = (e) => {
+    setBranch(e.target.value);
   };
   return (
     <div
@@ -218,6 +244,33 @@ const Profile = () => {
                 onChange={(e) => setBio(e.target.value)}
                 className="mt-2 p-2 border rounded-md w-full"
               ></textarea>
+               <label htmlFor="registrationNumber">Registration Number</label>
+          <input
+            type="text"
+            id="registrationNumber"
+            value={registrationNumber}
+            onChange={handleRegistrationNumberChange}
+            className="mt-1 p-2 border rounded-md w-full"
+          />
+          <label htmlFor="batch">Batch</label>
+          <input
+            type="text"
+            id="batch"
+            value={batch}
+            onChange={handleBatchChange}
+            className="mt-1 p-2 border rounded-md w-full"
+          />
+          <label htmlFor="branch">Branch</label>
+          <input
+            type="text"
+            id="branch"
+            value={branch}
+            onChange={handleBranchChange}
+            className="mt-1 p-2 border rounded-md w-full"
+          />
+
+          {/* ... */}
+      
               <label
                 htmlFor="profile-photo-input"
                 className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-400 mt-2"
