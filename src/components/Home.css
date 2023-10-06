@@ -159,15 +159,16 @@ main > div > a:hover {
 }
 
 .swiper-slide--one {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/download.jpeg") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/sai.jpg") no-repeat 50% 50%/cover;
 }
 
 .swiper-slide--two {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/images.png") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/WhatsApp\ Image\ 2023-10-06\ at\ 22.22.23_1dc92ba5.jpg") no-repeat 50% 50%/cover;
+  /* object-fit: cover; */
 }
 
 .swiper-slide--three {
-  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/images.jpeg") no-repeat 50% 50%/cover;
+  background: linear-gradient(to top, #0f2027, #203a4300, #2c536400), url("../assests/Snapchat-778507393.jpg") no-repeat 50% 50%/cover;
 }
 
 /* .swiper-slide--four {
