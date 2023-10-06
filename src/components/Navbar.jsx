@@ -8,15 +8,15 @@ const Navbar = () => {
       <nav className="container mx-auto flex justify-between items-center">
         <div className="flex px-2 items-center">
           <img src={Logo} alt="Divulge Logo" className="h-8  rounded-full w-8 mr-2" />
-          <h1 className="text-white text-lg sm:text-3xl font-semibold">PLACEMENT PORTAL</h1>
+          <h1 className="text-white text-lg sm:text-3xl font-semibold">DIVULGE</h1>
         </div>
         <ul className="flex gap-2 sm:text-xl sm:space-x-4 over">
           
         <li>
             <Link
-              to="/aboutus"
+              to="/placements"
               className=" bg-transparent border border-blue-500 text-black hover:bg-blue-500 hover:text-white py-2  rounded"> 
-              AboutUs
+              Placements
             </Link>
           </li>
           <li>
