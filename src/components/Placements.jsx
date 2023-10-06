@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig"; // Import Firestore methods
 import PlacementCard from "./PlacementCard";
-import './Placements.css';
+
 
 const Placements = () => {
   const [placements, setPlacements] = useState([]);
