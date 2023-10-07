@@ -38,7 +38,7 @@ const ProfileCard = ({ profile, onAccept ,onDelete}) => {
       <div className="flex flex-col items-center">
         <img
           src={profile.profilePhotoURL}
-          alt="profile photo"
+          alt="yo"
           className="w-40 h-40 object-cover rounded-full mb-2"
         />
         <h2 className="text-xl font-semibold">{profile.registrationNumber}</h2>

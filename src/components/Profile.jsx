@@ -388,15 +388,17 @@ const Profile = () => {
                 type="text" 
                 value={companyName} 
                 onChange={(e) => setCompanyName(e.target.value)}
+                className="mt-1 p-2 border rounded-md w-full"
               />
             </label>
 
             <label>
-              Package:
+              Package in lpa:
               <input 
                 type="text" 
                 value={packageOffered}
                 onChange={(e) => setPackageOffered(e.target.value)}
+                className="mt-1 p-2 border rounded-md w-full"
               />
             </label>
 
@@ -405,6 +407,7 @@ const Profile = () => {
               <input 
                 type="file" 
                 onChange={handleOfferLetterChange}
+                className="mt-1 p-2 border rounded-md w-full"
               />
             </label>
             {/* Add a submit button to submit the placement details */}

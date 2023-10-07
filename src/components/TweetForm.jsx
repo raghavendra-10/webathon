@@ -8,6 +8,7 @@ import { BsImage } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
 import { FaSpinner } from "react-icons/fa";
 import { getDocs, where, query } from 'firebase/firestore';
+
 const TweetForm = ({ user, onClose }) => {
   const [tweet, setTweet] = useState("");
   const [tweetPhoto, setTweetPhoto] = useState(null);

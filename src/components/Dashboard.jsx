@@ -13,7 +13,7 @@ import { getDocs, where, query } from "firebase/firestore";
 import { AiFillHome } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {BiMessageDetail} from "react-icons/bi"
+import { BiMessageDetail } from "react-icons/bi"
 const Dashboard = () => {
   const { user, logout } = UserAuth();
   const navigate = useNavigate();
@@ -21,6 +21,9 @@ const Dashboard = () => {
   const [username, setUsername] = useState("");
   const [adminUid, setAdminUid] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [hasDepartment, setHasDepartment] = useState(false);
+
+
 
   const handleLogout = async () => {
     try {
@@ -48,23 +51,38 @@ const Dashboard = () => {
     fetchProfilePhotoURL();
 
     async function fetchAdminUid() {
-        try {
-          const adminsCollection = collection(db, "admin");
-          const adminsQuerySnapshot = await getDocs(adminsCollection);
-          if (!adminsQuerySnapshot.empty) {
-            const adminData = adminsQuerySnapshot.docs[0].data();
-            setAdminUid(adminData.uid || "");
-  
-            // Check if the user is an admin
-            setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
-          }
-        } catch (error) {
-          console.error("Error fetching admin UID:", error);
+      try {
+        const adminsCollection = collection(db, "admin");
+        const adminsQuerySnapshot = await getDocs(adminsCollection);
+        if (!adminsQuerySnapshot.empty) {
+          const adminData = adminsQuerySnapshot.docs[0].data();
+          setAdminUid(adminData.uid || "");
+
+          // Check if the user is an admin
+          setIsAdmin(user.uid === adminData.uid); // Set isAdmin state based on the comparison
         }
+      } catch (error) {
+        console.error("Error fetching admin UID:", error);
       }
-  
-      fetchAdminUid();
-    }, [user.uid, adminUid]);
+    }
+
+    fetchAdminUid();
+    async function checkUserDepartment() {
+      const deptCollection = collection(db, "department");
+      const deptQuery = query(deptCollection, where("uid", "==", user.uid));
+      const deptQuerySnapshot = await getDocs(deptQuery);
+
+      if (!deptQuerySnapshot.empty) {
+        setHasDepartment(true);
+      } else {
+        setHasDepartment(false);
+      }
+    }
+
+    checkUserDepartment();
+
+
+  }, [user.uid, adminUid]);
   const handleTweetClick = () => {
     if (!username) {
       // Show a notification to fill the profile
@@ -116,21 +134,27 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className="text-gray-600 hover:text-blue-500">
-          <Link to={`/profile/${user.uid}`}>
+            <Link to={`/profile/${user.uid}`}>
               <RiProfileLine size={24} />
             </Link>
           </div>
-          {isAdmin&&(
-          <div className="text-gray-600 hover:text-blue-500">
-            <Link to="/admindashboard">
-              <SiPhpmyadmin size={24} />
-            </Link>
-          </div>
-)}
-         
+          {isAdmin && (
+            <div className="text-gray-600 hover:text-blue-500">
+              <Link to="/admindashboard">
+                <SiPhpmyadmin size={24} />
+              </Link>
+            </div>
+          )}
+          {hasDepartment && (
+            <div className="text-gray-600 hover:text-blue-500">
+              <Link to="/deptdashboard">
+                <SiPhpmyadmin size={24} />
+              </Link>
+            </div>
+          )}
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
-            <RiBookmarkLine size={24} />
+              <RiBookmarkLine size={24} />
             </Link>
           </div>
           <div

@@ -196,6 +196,7 @@ const AdminDashboard = () => {
               <RiProfileLine size={24} />
             </Link>
           </div>
+          
           {isAdmin && (
             <div className="text-gray-600 hover:text-blue-500">
               <Link to="/admindashboard">
@@ -203,7 +204,7 @@ const AdminDashboard = () => {
               </Link>
             </div>
           )}
-
+          
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
               <RiBookmarkLine size={24} />
