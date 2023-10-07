@@ -125,7 +125,7 @@ const SlideLogin = () => {
           </div>
           <form onSubmit={handleLoginSubmit} className="form">
             <h1 className="h1 sm:text-3xl">Sign In</h1>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row sm:gap-2">
               <input type="radio" id="loginStudent" name="loginRole" value="student"
                 onChange={(e) => {
                   setUserRole(e.target.value);
