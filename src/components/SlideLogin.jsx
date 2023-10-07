@@ -15,7 +15,9 @@ const SlideLogin = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+  const [userRole, setUserRole] = useState("");
+  const [emailPlaceholder, setEmailPlaceholder] = useState("@vishnu.edu.in");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -108,10 +110,10 @@ const SlideLogin = () => {
             />
             <button className="button" type="submit" disabled={isLoading}>
               {isLoading ? (<>
-                        <FaSpinner size={20} className="animate-spin ml-1" />
-                      </>): (
-                        "Sign Up"
-                      )}
+                <FaSpinner size={20} className="animate-spin ml-1" />
+              </>) : (
+                "Sign Up"
+              )}
             </button>
           </form>
         </div>
@@ -123,16 +125,41 @@ const SlideLogin = () => {
           </div>
           <form onSubmit={handleLoginSubmit} className="form">
             <h1 className="h1 sm:text-3xl">Sign In</h1>
+            <div className="flex gap-2">
+              <input type="radio" id="loginStudent" name="loginRole" value="student"
+                onChange={(e) => {
+                  setUserRole(e.target.value);
+                  setEmailPlaceholder("@vishnu.edu.in");
+                }}
+              />
+              <label htmlFor="loginStudent">Student</label>
 
+              <input type="radio" id="loginCoordinator" name="loginRole" value="coordinator"
+                onChange={(e) => {
+                  setUserRole(e.target.value);
+                  setEmailPlaceholder("@gmail.com");
+                }}
+              />
+              <label htmlFor="loginCoordinator">Coordinator</label>
+
+              <input type="radio" id="loginAdmin" name="loginRole" value="admin"
+                onChange={(e) => {
+                  setUserRole(e.target.value);
+                  setEmailPlaceholder("@gmail.com");
+                }}
+              />
+              <label htmlFor="loginAdmin">Admin</label>
+            </div>
             <input
-              className="input "
+              className="input"
               type="email"
               name="email"
+              placeholder={emailPlaceholder}
               onChange={(event) => {
                 setLoginEmail(event.target.value);
               }}
-              placeholder="@vishnu.edu.in"
             />
+
             <input
               className="input "
               type="password"
@@ -147,10 +174,10 @@ const SlideLogin = () => {
           </button> */}
             <button className="button" type="submit" disabled={isLoading}>
               {isLoading ? (<>
-                        <FaSpinner size={20} className="animate-spin ml-1" />
-                      </>): (
-                        "Sign In"
-                      )}
+                <FaSpinner size={20} className="animate-spin ml-1" />
+              </>) : (
+                "Sign In"
+              )}
             </button>
           </form>
         </div>

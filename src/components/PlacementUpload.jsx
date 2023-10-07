@@ -61,14 +61,14 @@ export default function PlacementUpload() {
 return (
     <div className="flex flex-col h-max-screen  items-center justify-center">
     <div className="p-6 bg-white rounded-lg shadow-xl ">
-        <h2 className="text-2xl font-bold mb-4 text-center">Upload Placement Results</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Notify Placement Results</h2>
         <div className="flex flex-col space-y-4">
             <div>
                 <label className="block text-sm font-medium mb-1">Select CSV File:</label>
                 <input type="file" onChange={handleFileChange} className="p-2 border rounded w-full"/>
             </div>
             <button onClick={uploadResults} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded w-full transition duration-300">
-                Upload Results
+                Notify Results
             </button>
         </div>
     </div>

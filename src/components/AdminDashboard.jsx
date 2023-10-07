@@ -9,7 +9,7 @@ import { RiProfileLine, RiBookmarkLine } from "react-icons/ri";
 import { db } from "../firebaseConfig";
 import { collection, doc, deleteDoc } from "firebase/firestore";
 import { getDocs, where, query } from "firebase/firestore";
-
+import Papa from 'papaparse';
 import ProfileCard from "./ProfileCard";
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
@@ -26,6 +26,44 @@ const AdminDashboard = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeProfiles, setActiveProfiles] = useState([]);
   const [data, setData] = useState([]);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [selectedMaxPackage, setSelectedMaxPackage] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+
+
+
+  // ... rest of your imports and code
+
+  const handleSubmitReport = async () => {
+    const placementsCollection = collection(db, "placements");
+    const querySnapshot = await getDocs(placementsCollection);
+    const allPlacements = querySnapshot.docs.map(doc => doc.data());
+    console.log("All placements:", allPlacements);
+
+    // Filter according to user selection
+    const filteredPlacements = allPlacements.filter(placement =>
+      parseFloat(placement.packageOffered) <= parseFloat(selectedMaxPackage) &&
+      placement.batch === selectedYear
+    );
+    console.log("Filtered placements:", filteredPlacements);
+
+    // Convert filtered data to CSV
+    const csv = Papa.unparse(filteredPlacements);
+    console.log("CSV data:", csv);
+
+    // Download the CSV
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "filtered_placements.csv";
+
+    document.body.appendChild(a);
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,17 +201,22 @@ const AdminDashboard = () => {
         <div className="mb-8 pb-8 mt-2 pt-8">
 
           <div className="mb-8 pb-8 mt-2 pt-8">
-            <div className="flex justify-around">
-            <BarChart width={600} height={300} data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="batch" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="avgPackage" fill="#8884d8" />
-            </BarChart>
-            <div className="flex  justify-center flex-col">
-              <PlacementUpload/>
-            </div>
+            <div className="flex justify-between flex-col sm:flex-row">
+              <BarChart width={600} height={300} data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="batch" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="avgPackage" fill="#8884d8" />
+              </BarChart>
+              <div className="flex  justify-center flex-col">
+                <PlacementUpload />
+                <div className="mt-4">
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowReportForm(true)}>
+                    Generate Reports
+                  </button>
+                </div>
+              </div>
             </div>
             <h1 className="text-2xl font-semibold mb-4">Active Profiles</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -196,7 +239,7 @@ const AdminDashboard = () => {
               <RiProfileLine size={24} />
             </Link>
           </div>
-          
+
           {isAdmin && (
             <div className="text-gray-600 hover:text-blue-500">
               <Link to="/admindashboard">
@@ -204,7 +247,7 @@ const AdminDashboard = () => {
               </Link>
             </div>
           )}
-          
+
           <div className="text-gray-600 hover:text-blue-500">
             <Link to="/bookmarks">
               <RiBookmarkLine size={24} />
@@ -218,6 +261,43 @@ const AdminDashboard = () => {
         <div className="fixed backdrop-blur-md inset-0 flex justify-center items-center bg-gray-800 z-50">
           <div className="bg-white p-4 rounded-md shadow-md w-2/3">
             <TweetForm user={user} onClose={() => setShowTweetForm(false)} />
+          </div>
+        </div>
+      )}
+      {showReportForm && (
+        <div className="fixed backdrop-blur-md inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-md shadow-md sm:w-2/3">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Max Package Upto:</label>
+              <select value={selectedMaxPackage} onChange={e => setSelectedMaxPackage(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {/* Add options as required */}
+                <option value="5">5 LPA</option>
+                <option value="10">10 LPA</option>
+                <option value="15">15 LPA</option>
+                <option value="20">20 LPA </option>
+                <option value="30">30 LPA </option>
+
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Year:</label>
+              <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {/* Add options as required */}
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+            </div>
+
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={handleSubmitReport}>
+              Generate Report
+            </button>
+            <button className="bg-blue-500 mx-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowReportForm(false)}>
+              Close
+            </button>
           </div>
         </div>
       )}
